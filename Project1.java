@@ -61,15 +61,43 @@ public class Project1 {
         distances();
         cities();
        
-        System.out.println("================================");
-        System.out.println("____DELIVERY COST ESTIMATION____");
-        System.out.println("________________________________");
         
               
     }
   
         
+
+
+    
+     public static void cities(){
+         
+      
+         
+         city [0]="Colombo";
+         city [1]="Gampaha";
+         city [2]="Kandy";
+         city [3]="Kurunegala";
+         
+         
 }
+     public static void distances(){
+         //to add distances 
+       
+        distances [0][0]=0;
+        distances [1][1]=0;
+        distances [2][2]=0;
+        distances [3][3]=0;
+        
+        distances [0][1]=distances [1][0]=40;
+        distances [0][2]=distances [2][0]=115;
+        distances [0][3]=distances [3][0]=130;
+       
+        distances [1][2]=distances [2][1]=140;
+        distances [1][3]=distances [3][1]=100;
+        distances [2][3]=distances [3][2]=90;
+  
+     }
+   
         public static void addCity(Scanner sc){
           if (cityCount>=30){
               System.out.println("Maximum number of cities reached!");//prevent add more cities than 30
@@ -129,36 +157,7 @@ public class Project1 {
          }  
         
         
-        
-     public static void cities(){
-         //cities can add,remove,edit
-      
-         
-         city [0]="Colombo";
-         city [1]="Gampaha";
-         city [2]="Kandy";
-         city [3]="Kurunegala";
-         
-         
-}
-     public static void distances(){
-         //to add distances 
-       
-        distances [0][0]=0;
-        distances [1][1]=0;
-        distances [2][2]=0;
-        distances [3][3]=0;
-        
-        distances [0][1]=distances [1][0]=40;
-        distances [0][2]=distances [2][0]=115;
-        distances [0][3]=distances [3][0]=130;
-       
-        distances [1][2]=distances [2][1]=140;
-        distances [1][3]=distances [3][1]=100;
-        distances [2][3]=distances [3][2]=90;
-  
-     }
-   
+    
                      
 }
          
