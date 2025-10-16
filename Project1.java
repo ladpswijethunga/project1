@@ -83,9 +83,15 @@ public class Project1 {
               if(city[i].equalsIgnoreCase(name)){
                   System.out.println("City already exist");
                   return;}}
+          
+              
           //now adding the city after checking existence
-           city[cityCount]=name;
-              cityCount++;
+              city[cityCount]=name;
+          //prevent adding more coloumns to the distance table
+             for (int i=0;i<=cityCount;i++){
+                 distances [cityCount][i]=distances [i][cityCount]=0;}
+              cityCount++;//only increment once
+
             System.out.println("City added successfully!");
 
 
