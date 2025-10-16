@@ -232,7 +232,62 @@ public class Project1 {
          }  
         
         
+    public static void deliveryDetails(){
+        
+        String [] vehicle={"Three-Wheel","Van","Lorry"};
+         double [] kgCapacity ={300,1000,10000};
+         double [] ratePerKm ={20,30,80};
+         int [] averageSpeed={40,60,45};
+         int []fuelEfficiency ={25,12,4};
+         
+         
+         Scanner sc=new Scanner(System.in);
+         
+         System.out.println("CHOOSE COURCE AND DESTINATION CITIES FIRST(Enter the number)" );
+         System.out.println("Available cities-> ");
+         for( int i=0;i< cityCount;i++){
+             System.out.println(i+"-"+city[i]);  }
+         System.out.print("Source city:");
+         int sourceCity=sc.nextInt();
+         System.out.print("Destination city:");
+         int destinationCity=sc.nextInt();
+         if(sourceCity==destinationCity){
+         System.out.println("Source and Destination can't be same! ");
+         return;}
+         
+         System.out.println("CHOOSE VEHICLE");
+         System.out.println("Available vehicles-> ");
+         for( int i=0;i<vehicle.length;i++){
+             System.out.println(i+"-"+vehicle[i]);  }
+         System.out.print("Vehicle:");
+         int vehicleType=sc.nextInt();
+         if(vehicleType< 0 || vehicleType>vehicle.length){
+             System.out.println("Invalid input!");
+             return;    }
+     
+         
+        
     
+         
+         System.out.print("ENTER TOTAL WEIGHT HAS TO DELIVER IN kg:");
+         double weight=sc.nextDouble();
+         if( weight >kgCapacity[vehicleType] ){
+             System.out.println("The selected vehicle can't carry this weight.Try another vehicle!");
+             return;
+             
+         }
+          
+         System.out.println("=====DELIVERY COST ESTIMATION=====");
+         System.out.println("FROM:"+city[sourceCity]);
+         System.out.println("TO:"+city[destinationCity]);
+         System.out.println("MINIMUM DISTANCE:"+distances [sourceCity][destinationCity]+"km" );
+         System.out.println("VEHICLE:"+vehicle[vehicleType] );
+         System.out.println("WEIGHT:"+weight + "kg");
+         
+         
+         
+    }
+
                      
 }
          
