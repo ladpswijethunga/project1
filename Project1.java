@@ -266,8 +266,8 @@ public class Project1 {
         String [] vehicle={"Three-Wheel","Van","Lorry"};//added 3 vehicles
          double [] kgCapacity ={300,1000,10000};
          double [] ratePerKm ={20,30,80};
-         int [] averageSpeed={40,60,45};
-         int []fuelEfficiency ={25,12,4};
+         double[] averageSpeed={40,60,45};
+         double []fuelEfficiency ={25,12,4};
          
          //getting user inputs
          Scanner sc=new Scanner(System.in);
