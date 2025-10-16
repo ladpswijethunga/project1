@@ -22,6 +22,41 @@ public class Project1 {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+
+      
+        Scanner sc=new Scanner(System.in);
+
+        while (true){
+            System.out.println("====== MAIN MENU======");
+            System.out.println("1.City and Distance Management");
+            System.out.println("2.Delivery Confirmation");
+            System.out.println("3.exit");
+        
+            System.out.print("CHOOSE AN OPTION:");
+            int option1=sc.nextInt();
+            
+            switch(option1){
+                case 1:
+                   cityManagement(); 
+                case 2:
+                    deliveryDetails();
+                case 3:
+                    return;
+                default:
+                     System.out.println("Invalid Input!");
+            }
+            
+        }
+       
+        //calling methods in main method
+        distances();
+        cities();
+       
+        
+}
+    
+     public static void cityManagement(){
+       
         //CREATING THE CITY MENU
         Scanner sc=new Scanner(System.in);
         while (true){
@@ -57,10 +92,6 @@ public class Project1 {
         }
  
         
-        //calling methods in main method
-        distances();
-        cities();
-       
         
               
     }
