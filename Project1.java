@@ -260,38 +260,51 @@ public class Project1 {
           
               
 
-         }  
+         }  public static void deliveryDetails(){
         
-        
-    public static void deliveryDetails(){
-        
-        String [] vehicle={"Three-Wheel","Van","Lorry"};
+        //adding arrays for vehicle details as fixed types
+        String [] vehicle={"Three-Wheel","Van","Lorry"};//added 3 vehicles
          double [] kgCapacity ={300,1000,10000};
          double [] ratePerKm ={20,30,80};
          int [] averageSpeed={40,60,45};
          int []fuelEfficiency ={25,12,4};
          
-         
+         //getting user inputs
          Scanner sc=new Scanner(System.in);
          
          System.out.println("CHOOSE COURCE AND DESTINATION CITIES FIRST(Enter the number)" );
+         //showiing vehicles list to the user
          System.out.println("Available cities-> ");
+         //going through the city array
          for( int i=0;i< cityCount;i++){
              System.out.println(i+"-"+city[i]);  }
+         
+         //getting source city index from user
          System.out.print("Source city:");
          int sourceCity=sc.nextInt();
+         
+         //getting destination city index from user
          System.out.print("Destination city:");
          int destinationCity=sc.nextInt();
+         
+         //make sure source and destination cities are not same
          if(sourceCity==destinationCity){
          System.out.println("Source and Destination can't be same! ");
          return;}
          
+         //giving user the chance to choose the vehicle
          System.out.println("CHOOSE VEHICLE");
          System.out.println("Available vehicles-> ");
+         
+         //going through vehucle array
          for( int i=0;i<vehicle.length;i++){
              System.out.println(i+"-"+vehicle[i]);  }
+         
+         //geting user input
          System.out.print("Vehicle:");
          int vehicleType=sc.nextInt();
+         
+         //make sure user giving the valid input
          if(vehicleType< 0 || vehicleType>vehicle.length){
              System.out.println("Invalid input!");
              return;    }
@@ -299,15 +312,17 @@ public class Project1 {
          
         
     
-         
+         //getting user input about weight
          System.out.print("ENTER TOTAL WEIGHT HAS TO DELIVER IN kg:");
          double weight=sc.nextDouble();
+         
+         //make sure weight doesn't exceed the weight limit of choosed vehicle
          if( weight >kgCapacity[vehicleType] ){
              System.out.println("The selected vehicle can't carry this weight.Try another vehicle!");
              return;
              
          }
-          
+          // making output estimation
          System.out.println("=====DELIVERY COST ESTIMATION=====");
          System.out.println("FROM:"+city[sourceCity]);
          System.out.println("TO:"+city[destinationCity]);
@@ -319,6 +334,10 @@ public class Project1 {
          
     }
 
+
+
+        
+     
                      
 }
          
