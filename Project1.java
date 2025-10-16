@@ -141,10 +141,85 @@ public class Project1 {
          city[index]=newName;
           System.out.println("City name renamed successfully!");
 
-     //for (int i=0;i< cityCount-1;i++){
+    
            
 
          }
+         
+    public static void removeCity(){
+        Scanner sc=new Scanner(System.in);
+         //getting the city index to remove
+               System.out.print("Enter the city index that wants to remove (0 to "+ (cityCount-1) +"):");
+               int index =sc.nextInt();
+               sc.nextLine();
+        
+         //checking the index exsist or not
+               if (index<0 || index >= cityCount){
+                   System.out.println("Invalid index!");
+                   return;}
+         //shift cities and distance
+               for (int i=index; i< cityCount-1;i++){
+                   city[i]=city[i+1];
+               for (int j=0; j< cityCount;j++){
+                  distances [i][j]=distances [i+1][j];
+                  distances [j][i]=distances [j][i+1];}
+              }
+              
+                 cityCount--;
+               System.out.println("City name Removed successfully!");      
+
+    }
+
+    public static void editDistance(){
+        Scanner sc=new Scanner(System.in);
+        // to comapre distances atleast 2 cities should have 
+           if (cityCount <2){
+               System.out.println("Add atleast 2 cities first!");
+               return ;
+       }
+           System.out.print("Enter first city index(0 to "+(cityCount-1)+ "):");
+                int cityIndex1=sc.nextInt();
+                sc.nextLine();
+           System.out.print("Enter second city index(0 to "+(cityCount-1)+ "):");
+                int cityIndex2=sc.nextInt();
+                 sc.nextLine();
+                
+        //checking indexes are same or not
+            if(cityIndex1==cityIndex2){
+                   System.out.println("Distance to itself is always 0!");
+                   return;}
+            System.out.print("Enter distance from "+ (city[cityIndex1])+" to "+(city[cityIndex2])+":");
+            int distance=sc.nextInt();
+            sc.nextLine();
+            distances[cityIndex1][cityIndex2]=distances[cityIndex2][cityIndex1]=distance; //kept symmetric
+            System.out.println("Distance updated sucessfully!");
+
+    }
+
+    public static void displayDistance(){
+          // checking avilability of cities to dispaly
+            if (cityCount==0){
+               System.out.println("NO cities to display!");
+               return;
+            }
+          // creating the city-distance table to display
+             System.out.printf("%15s"," ");
+             for (int i=0; i< cityCount;i++){
+                System.out.printf("%15s",city[i]);}
+                System.out.println();
+              for (int i=0; i< cityCount;i++){
+                 System.out.printf("%15s",city[i]);
+
+                for (int j=0; j< cityCount;j++){
+                    System.out.printf("%15d",distances[i][j]);
+                }
+         System.out.println();
+ 
+    
+             } 
+    
+
+   }
          
         
         
