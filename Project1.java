@@ -4,6 +4,7 @@
  */
 package project1;
 import java.util.Scanner;
+import java.text.DecimalFormat;
 
 
 
@@ -12,25 +13,36 @@ import java.util.Scanner;
  *
  * @author pamod
  */
-public class Project1 {
-    static String [] city=new String[30];//created an array for store up to maximum30 cities
-    static int [][] distances=new int[30] [30];//created a symmetric 2D array for store distances
-    static int cityCount=0;
-    
+ public class Project1{
+       static String [] city=new String[30];//created an array for store up to maximum30 cities
+       static int [][] distances=new int[30] [30];//created a symmetric 2D array for store distances
+       static int cityCount=0;
+       final static int MAX_DELIVERIES=50;//maximum delivery count is 50    
+       //creating arrays for storing delivery details
+            
+             static int [] deliverySource= new int [MAX_DELIVERIES];
+            static int [] deliveryDestination= new int [MAX_DELIVERIES];
+             static int [] deliveryDistance= new int [MAX_DELIVERIES];
+             static int [] deliveryVehicle= new int [MAX_DELIVERIES];
+            static  double [] deliveryWeight= new double[MAX_DELIVERIES];
+            static String [] deliveryCharge= new String[MAX_DELIVERIES];//data type changed to the string ,while converting it to only two decimal places
+       static  int delievryCount=0;
 
-    /**
-     * @param args the command line arguments
-     */
+
     public static void main(String[] args) {
-
-      
+        //calling methods in main method
+        
+                distances();
+                cities();
+             
         Scanner sc=new Scanner(System.in);
 
         while (true){
             System.out.println("====== MAIN MENU======");
             System.out.println("1.City and Distance Management");
-            System.out.println("2.Delivery Confirmation");
-            System.out.println("3.exit");
+            System.out.println("2.Add Delivery ");
+            System.out.println("3.Show All Deliveries");
+            System.out.println("4.Exit");
         
             System.out.print("CHOOSE AN OPTION:");
             int option1=sc.nextInt();
@@ -39,144 +51,153 @@ public class Project1 {
                 case 1:
                    cityManagement(); 
                 case 2:
-                    deliveryDetails();
+                    addDelivery();
                 case 3:
+                    
+                case 4:
                     return;
                 default:
                      System.out.println("Invalid Input!");
             }
             
+            
+             
         }
-       
-        //calling methods in main method
-        distances();
-        cities();
-       
+        
+                
         
 }
-    
+                
+                
+
      public static void cityManagement(){
-       
         //CREATING THE CITY MENU
         Scanner sc=new Scanner(System.in);
         while (true){
-            System.out.println(_____CITY & DIATANCE MANAGEMENT_____);
+            System.out.println("_____CITY & DIATANCE MANAGEMENT_____");
             System.out.println("1. ADD CITY");
             System.out.println("2. RENAME CITY");
             System.out.println("3.REMOVE CITY");
             System.out.println("4.INPUT/EDIT DISTANCE");
             System.out.println("5.DISPLAY DISTANCE TABLE");
             System.out.println("6.EXIT");
+
+        //choosing what is going to do
             System.out.print("Choose an option:");
-            int choice =sc.nextInt();
-             
+            int choice =sc.nextInt(); 
+          
+            
+        
+         //calling methods using a switch according to the menu input    
             switch (choice){
-                case1:
-                    addCity(sc);
-                case2:   
-                    renameCity(sc);
-                case3:
-                    removeCity(sc);
-                case4: 
-                    editDistance(sc);
-                case5:
-                    displayDistance(sc);
-                case6:
-                   return;
+                case 1:
+                    addCity();// to add a new city to the list
+                    break;
+                case 2:   
+                    renameCity();// to rename a city name
+                    break;
+                case 3:
+                    removeCity();//to remove a city from the list 
+                    break;
+                case 4: 
+                    editDistance();// to change distance between two cities
+                    break;
+                case 5:
+                    displayDistance();// to display the city-distance table
+                    break;
+                case 6:
+                   return; // user choosed to exit from the system
                 default:
-                    System.out.println{"Invalid Input");
-               
-                    
-            }
-                    
-        }
- 
-        
-        
+                    System.out.println("Invalid Input!"); }
               
-    }
+        }
   
         
-
-
+     }
     
-     public static void cities(){
-         
-      
-         
-         city [0]="Colombo";
-         city [1]="Gampaha";
-         city [2]="Kandy";
-         city [3]="Kurunegala";
-         
-         
-}
+    public static void cities(){
+     // input several  cities to the system 
+        city [0]="Colombo";
+        city [1]="Gampaha";
+        city [2]="Kandy";
+        city [3]="Kurunegala";
+         cityCount=4; //changed cituCount because it has initialized globally as 0
+        
+     }
      public static void distances(){
          //to add distances 
        
-        distances [0][0]=0;
+        distances [0][0]=0;//keeping distance between same city as 0
         distances [1][1]=0;
         distances [2][2]=0;
         distances [3][3]=0;
         
-        distances [0][1]=distances [1][0]=40;
-        distances [0][2]=distances [2][0]=115;
-        distances [0][3]=distances [3][0]=130;
+       distances [0][1]=distances [1][0]=40;// keeping the distance between same 2 cities symmetric
+       distances [0][2]=distances [2][0]=115;
+       distances [0][3]=distances [3][0]=130;
        
-        distances [1][2]=distances [2][1]=140;
-        distances [1][3]=distances [3][1]=100;
-        distances [2][3]=distances [3][2]=90;
+       distances [1][2]=distances [2][1]=140;
+       distances [1][3]=distances [3][1]=100;
+       distances [2][3]=distances [3][2]=90;
   
      }
-   
-        public static void addCity(Scanner sc){
-          if (cityCount>=30){
-              System.out.println("Maximum number of cities reached!");//prevent add more cities than 30
+        
+     public static void addCity(){
+         Scanner sc=new Scanner(System.in);
+
+        //prevent add more cities than 30
+    
+         if (cityCount>=30){
+              System.out.println("Maximum number of cities reached!");
               return;
           }
           System.out.print("Enter new city name:");
            String name=sc.nextLine();
+           System.out.println();
            
           //checking the city name already exsist or not before add to the array
           for (int i=0;i<cityCount;i++){
-              if(city[i].equalsIgnoreCase(name)){
-                  System.out.println("City already exist");
+              if(city[i]!= null && city[i].equalsIgnoreCase(name)){
+                  System.out.println("City already exist!");
                   return;}}
-          
-              
           //now adding the city after checking existence
               city[cityCount]=name;
           //prevent adding more coloumns to the distance table
              for (int i=0;i<=cityCount;i++){
                  distances [cityCount][i]=distances [i][cityCount]=0;}
-              cityCount++;//only increment once
-
-            System.out.println("City added successfully!");
-
-
-
-                  
-              }
-    public static void renameCity(Scanner sc){
-//getting the city index to remove
-         System.out.print("Enter the city index that wants to remove (0 to:"+ (cityCount-1) +"):");
-         int index= sc.nextInt();
-//checking the index exsist or not
-         if (index<0 || index >= cityCount){
-              System.out.println("Invalid index!");
-              return;}
-//getting new city name that wants to add because the index is valid
-          System.out.print("Enter new name:");
+                 cityCount++;//only increment once
+                 
+             
           
-          String newName=sc.nextLine();
-         city[index]=newName;
-          System.out.println("City name renamed successfully!");
+            System.out.println("City added successfully!");
+          
+        }  
+                
+                 
+              
+    public static void renameCity(){
+        Scanner sc=new Scanner(System.in);
+        //getting the city index to rename
+             System.out.print("Enter the city index that wants to rename (0 to " + (cityCount - 1) +"):");
+                int index= sc.nextInt();
+                sc.nextLine();//to prevent skipping inputs and clear extra new lines
+              
+                
+        //checking the index exsist or not
+                if (index < 0 || index >= cityCount){
+                   System.out.println("Invalid index!");
+                   return;}
+        //getting new city name that wants to add because the index is valid
+                 System.out.print("Enter new name:");
+                 String newName=sc.nextLine();
+                   
+                city[index]=newName;
+                System.out.println("City name Renamed successfully!");
+          
+    }
+
 
     
-           
-
-         }
-         
     public static void removeCity(){
         Scanner sc=new Scanner(System.in);
          //getting the city index to remove
@@ -251,25 +272,23 @@ public class Project1 {
     
 
    }
-         
-        
-        
-              
-              
-          
-          
-              
-
-         }  public static void deliveryDetails(){
+    public static void addDelivery(){
+        boolean addAnother=true; 
+        while(addAnother){ //created for continuous delivery addings
         
         //adding arrays for vehicle details as fixed types
         String [] vehicle={"Three-Wheel","Van","Lorry"};//added 3 vehicles
          double [] kgCapacity ={300,1000,10000};
          double [] ratePerKm ={20,30,80};
-         double[] averageSpeed={40,60,45};
-         double []fuelEfficiency ={25,12,4};
+         double [] averageSpeed={40,60,45};
+         double[]fuelEfficiency ={25,12,4};
          
-         //getting user inputs
+         //checking delivery count
+         if (delievryCount>= MAX_DELIVERIES){
+             System.out.println("MAXIMUM DELIVERY LIMIT REACHED!");
+              return;}
+            
+         //getting user inputs because delivery count is less than 50
          Scanner sc=new Scanner(System.in);
          
          System.out.println("CHOOSE COURCE AND DESTINATION CITIES FIRST(Enter the number)" );
@@ -282,10 +301,12 @@ public class Project1 {
          //getting source city index from user
          System.out.print("Source city:");
          int sourceCity=sc.nextInt();
+          sc.nextLine();//to avoid user input errors
          
          //getting destination city index from user
          System.out.print("Destination city:");
          int destinationCity=sc.nextInt();
+          sc.nextLine();//to avoid user input errors
          
          //make sure source and destination cities are not same
          if(sourceCity==destinationCity){
@@ -303,6 +324,7 @@ public class Project1 {
          //geting user input
          System.out.print("Vehicle:");
          int vehicleType=sc.nextInt();
+          sc.nextLine();//to avoid user input errors
          
          //make sure user giving the valid input
          if(vehicleType< 0 || vehicleType>vehicle.length){
@@ -315,6 +337,7 @@ public class Project1 {
          //getting user input about weight
          System.out.print("ENTER TOTAL WEIGHT HAS TO DELIVER IN kg:");
          double weight=sc.nextDouble();
+          sc.nextLine();//to avoid user input errors
          
          //make sure weight doesn't exceed the weight limit of choosed vehicle
          if( weight >kgCapacity[vehicleType] ){
@@ -322,6 +345,48 @@ public class Project1 {
              return;
              
          }
+         
+         
+         //calculating base cost
+         double baseCost=((distances [sourceCity][destinationCity]* ratePerKm[vehicleType])* (1+(weight/10000)));
+         DecimalFormat value1=new DecimalFormat("0.00");
+         
+         // calculating used fuel
+         double usedFuel=(distances [sourceCity][destinationCity]/fuelEfficiency[vehicleType]);
+         DecimalFormat value2=new DecimalFormat("0.00");
+         
+        
+         //calculating fuel cost
+         double fuelCost=(usedFuel * 310);//fuel price got as 310 LKR per Liter
+         DecimalFormat value3=new DecimalFormat("0.00");
+         
+         //calculating operational cost
+         double totalCost=(baseCost+fuelCost);
+         DecimalFormat value4=new DecimalFormat("0.00");
+         
+         //calculating profit
+         double profit =(baseCost*0.25);//assumed 25% markup on base delivery cost
+         DecimalFormat value5=new DecimalFormat("0.00");
+         
+         //Calculating customer charge
+         double finalCharge=(totalCost+profit);
+         DecimalFormat value6=new DecimalFormat("0.00");
+         
+         //Time estimating
+         double time=( distances [sourceCity][destinationCity]/ averageSpeed[vehicleType]);
+         DecimalFormat value7=new DecimalFormat("0.00");
+         
+         
+          deliverySource[cityCount]= sourceCity;
+          deliveryDestination [cityCount]=destinationCity;
+          deliveryDistance [cityCount]=distances [sourceCity][destinationCity];
+          deliveryVehicle [cityCount]=vehicleType;
+          deliveryWeight [cityCount]=weight;
+          deliveryCharge [cityCount]=value1.format(finalCharge );
+             
+         
+         
+         
           // making output estimation
          System.out.println("=====DELIVERY COST ESTIMATION=====");
          System.out.println("FROM:"+city[sourceCity]);
@@ -329,17 +394,28 @@ public class Project1 {
          System.out.println("MINIMUM DISTANCE:"+distances [sourceCity][destinationCity]+"km" );
          System.out.println("VEHICLE:"+vehicle[vehicleType] );
          System.out.println("WEIGHT:"+weight + "kg");
+         System.out.println("___________________________________");
+         System.out.println("BASE COST:"+ ((distances [sourceCity][destinationCity]+" x " +ratePerKm[vehicleType])+" x "+ "(1+("+weight+"/10000)) = ")+value1.format(baseCost) + " LKR");
+         System.out.println("FUEL USED :" + value2.format(usedFuel) +" L" );
+         System.out.println("FUEL COST:"+ value1.format(fuelCost) +"LKR" );
+         System.out.println("OPERATIONAL COST:" + value1.format(totalCost) +"LKR"  );  
+         System.out.println("PROFIT:"+value1.format( profit)+ "LKR");
+         System.out.println("CUSTOMER CHARGE:"+ value1.format(finalCharge )+ "LKR");
+         System.out.println("ESTIMATED TIME:"+value1.format(time)+"hours" );
          
          
+         System.out.println();
+         
+         System.out.println("DO YOU WANT TO ADD MORE DELIVERIES? (YES/NO)");
+                 String answer=sc.nextLine().toUpperCase();
+                 addAnother=answer.equals("YES"); //continue loop
+                 
+        }
          
     }
 
-
-
-        
      
-                     
-}
+ }  
          
          
          
