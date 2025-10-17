@@ -20,10 +20,10 @@ import java.text.DecimalFormat;
        final static int MAX_DELIVERIES=50;//maximum delivery count is 50    
        //creating arrays for storing delivery details
             
-             static int [] deliverySource= new int [MAX_DELIVERIES];
-            static int [] deliveryDestination= new int [MAX_DELIVERIES];
+             static String [] deliverySource= new String [MAX_DELIVERIES];
+            static   String [] deliveryDestination= new  String [MAX_DELIVERIES];
              static int [] deliveryDistance= new int [MAX_DELIVERIES];
-             static int [] deliveryVehicle= new int [MAX_DELIVERIES];
+             static  String [] deliveryVehicle= new  String [MAX_DELIVERIES];
             static  double [] deliveryWeight= new double[MAX_DELIVERIES];
             static String [] deliveryCharge= new String[MAX_DELIVERIES];//data type changed to the string ,while converting it to only two decimal places
        static  int delievryCount=0;
@@ -50,10 +50,13 @@ import java.text.DecimalFormat;
             switch(option1){
                 case 1:
                    cityManagement(); 
+                    break;
                 case 2:
                     addDelivery();
+                    break;
                 case 3:
                     deliveryTable();
+                     break;
                 case 4:
                     return;
                 default:
@@ -376,14 +379,14 @@ import java.text.DecimalFormat;
          double time=( distances [sourceCity][destinationCity]/ averageSpeed[vehicleType]);
          DecimalFormat value7=new DecimalFormat("0.00");
          
-         
-          deliverySource[cityCount]= sourceCity;
-          deliveryDestination [cityCount]=destinationCity;
-          deliveryDistance [cityCount]=distances [sourceCity][destinationCity];
-          deliveryVehicle [cityCount]=vehicleType;
-          deliveryWeight [cityCount]=weight;
-          deliveryCharge [cityCount]=value1.format(finalCharge );
-             
+         //storing delivery details
+          deliverySource[deliveryCount]= city[sourceCity];
+          deliveryDestination [deliveryCount]=city[destinationCity];
+          deliveryDistance [deliveryCount]=distances [sourceCity][destinationCity];
+          deliveryVehicle [deliveryCount]=vehicle[vehicleType];
+          deliveryWeight [deliveryCount]=weight;
+          deliveryCharge [deliveryCount]=value1.format(finalCharge );
+             deliveryCount++;
          
          
          
