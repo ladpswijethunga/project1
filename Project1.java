@@ -53,7 +53,7 @@ import java.text.DecimalFormat;
                 case 2:
                     addDelivery();
                 case 3:
-                    
+                    deliveryTable();
                 case 4:
                     return;
                 default:
@@ -412,7 +412,33 @@ import java.text.DecimalFormat;
                  
         }
          
+    }System.out.println("Delivery details added Successfully!");
+         
     }
+     public static void deliveryTable(){
+         
+  
+          // checking avilability of cities to dispaly
+            if (deliveryCount==0){
+               System.out.println("NO deliveries to display!");
+               return;
+            }
+          //display delivery records
+          
+         System.out.println("\n  _____ DELIVERY RECORDS ____");
+         for(int i=0;i<deliveryCount;i++){
+         System.out.println("FROM:"+deliverySource[i]);
+         System.out.println("TO:"+deliveryDestination [i]); 
+         System.out.println("MINIMUM DISTANCE:"+deliveryDistance [i]+"km" );
+          System.out.println("VEHICLE:"+deliveryVehicle[i] );
+         System.out.println("WEIGHT:"+deliveryWeight[i]+ "kg");   
+          System.out.println("CUSTOMER CHARGE:"+ deliveryCharge [i] + "LKR");
+     }
+ 
+    
+             } 
+    
+
 
      
  }  
