@@ -308,15 +308,32 @@ import java.text.DecimalFormat;
          for( int i=0;i< cityCount;i++){
              System.out.println(i+"-"+city[i]);  }
          
+         
+          int sourceCity;
+          int destinationCity;
+         
+        while(true) {
          //getting source city index from user
          System.out.print("Source city:");
-         int sourceCity=sc.nextInt();
-          sc.nextLine();//to avoid user input errors
-         
+          sourceCity=sc.nextInt();
+             sc.nextLine();//to avoid user input errors
+         if (sourceCity<0 || sourceCity>=cityCount){
+             System.out.println("invalid input!give a number between 0 and "+ (cityCount-1));
+             continue;}
+         break;}
+             
+      
+       while(true) {  
          //getting destination city index from user
          System.out.print("Destination city:");
-         int destinationCity=sc.nextInt();
-          sc.nextLine();//to avoid user input errors
+         destinationCity=sc.nextInt();
+         sc.nextLine();//to avoid user input errors
+         if (destinationCity<0 || destinationCity>cityCount){
+             System.out.println("invalid input!give a number between 0 and "+ (cityCount-1));
+             continue;}
+        break; }
+             
+          
          
          //make sure source and destination cities are not same
          if(sourceCity==destinationCity){
@@ -327,22 +344,26 @@ import java.text.DecimalFormat;
          System.out.println("CHOOSE VEHICLE");
          System.out.println("Available vehicles-> ");
          
-         //going through vehucle array
+         //going through vehicle array
          for( int i=0;i<vehicle.length;i++){
              System.out.println(i+"-"+vehicle[i]);  }
          
+         int vehicleType;
+          while(true){
          //geting user input
          System.out.print("Vehicle:");
-         int vehicleType=sc.nextInt();
+         vehicleType=sc.nextInt();
           sc.nextLine();//to avoid user input errors
-         
+   
+
          //make sure user giving the valid input
          if(vehicleType< 0 || vehicleType>vehicle.length){
-             System.out.println("Invalid input!");
-             return;    }
+             System.out.println("Invalid input! Enter a number in between o and "+(vehicle.length-1));
+             continue; }
+         break;
      
          
-        
+        }
     
          //getting user input about weight
          System.out.print("ENTER TOTAL WEIGHT HAS TO DELIVER IN kg:");
