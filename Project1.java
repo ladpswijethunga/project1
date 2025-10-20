@@ -3,7 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Main.java to edit this template
  */
 package project1;
-import java.util.Scanner;
+import java.util.*;
 import java.text.DecimalFormat;
 
 
@@ -21,12 +21,12 @@ import java.text.DecimalFormat;
        //creating arrays for storing delivery details
             
              static String [] deliverySource= new String [MAX_DELIVERIES];
-            static   String [] deliveryDestination= new  String [MAX_DELIVERIES];
+            static String [] deliveryDestination= new String [MAX_DELIVERIES];
              static int [] deliveryDistance= new int [MAX_DELIVERIES];
-             static  String [] deliveryVehicle= new  String [MAX_DELIVERIES];
+             static String [] deliveryVehicle= new String[MAX_DELIVERIES];
             static  double [] deliveryWeight= new double[MAX_DELIVERIES];
             static String [] deliveryCharge= new String[MAX_DELIVERIES];//data type changed to the string ,while converting it to only two decimal places
-       static  int delievryCount=0;
+       static  int deliveryCount=0;
 
 
     public static void main(String[] args) {
@@ -50,12 +50,12 @@ import java.text.DecimalFormat;
             switch(option1){
                 case 1:
                    cityManagement(); 
-                    break;
+                   break;
                 case 2:
                     addDelivery();
                     break;
                 case 3:
-                    deliveryTable();
+                     deliveryTable();
                      break;
                 case 4:
                     return;
@@ -67,9 +67,12 @@ import java.text.DecimalFormat;
              
         }
         
-                
+       
+               
         
-}
+    }       
+        
+
                 
                 
 
@@ -142,8 +145,12 @@ import java.text.DecimalFormat;
        distances [1][2]=distances [2][1]=140;
        distances [1][3]=distances [3][1]=100;
        distances [2][3]=distances [3][2]=90;
+       
+       
+       
+       }
   
-     }
+     
         
      public static void addCity(){
          Scanner sc=new Scanner(System.in);
@@ -287,7 +294,7 @@ import java.text.DecimalFormat;
          double[]fuelEfficiency ={25,12,4};
          
          //checking delivery count
-         if (delievryCount>= MAX_DELIVERIES){
+         if (deliveryCount>= MAX_DELIVERIES){
              System.out.println("MAXIMUM DELIVERY LIMIT REACHED!");
               return;}
             
@@ -349,13 +356,15 @@ import java.text.DecimalFormat;
              
          }
          
+         int shortestDistance= LeastDistanceRoute(city,distances,cityCount,sourceCity,destinationCity);//calling the LeastDistanceRoute method
+        
          
          //calculating base cost
-         double baseCost=((distances [sourceCity][destinationCity]* ratePerKm[vehicleType])* (1+(weight/10000)));
+         double baseCost=((shortestDistance* ratePerKm[vehicleType])* (1+(weight/10000)));
          DecimalFormat value1=new DecimalFormat("0.00");
          
          // calculating used fuel
-         double usedFuel=(distances [sourceCity][destinationCity]/fuelEfficiency[vehicleType]);
+         double usedFuel=(shortestDistance/fuelEfficiency[vehicleType]);
          DecimalFormat value2=new DecimalFormat("0.00");
          
         
@@ -376,7 +385,7 @@ import java.text.DecimalFormat;
          DecimalFormat value6=new DecimalFormat("0.00");
          
          //Time estimating
-         double time=( distances [sourceCity][destinationCity]/ averageSpeed[vehicleType]);
+         double time=( shortestDistance/ averageSpeed[vehicleType]);
          DecimalFormat value7=new DecimalFormat("0.00");
          
          //storing delivery details
@@ -387,6 +396,9 @@ import java.text.DecimalFormat;
           deliveryWeight [deliveryCount]=weight;
           deliveryCharge [deliveryCount]=value1.format(finalCharge );
              deliveryCount++;
+             
+             
+
          
          
          
@@ -394,11 +406,11 @@ import java.text.DecimalFormat;
          System.out.println("=====DELIVERY COST ESTIMATION=====");
          System.out.println("FROM:"+city[sourceCity]);
          System.out.println("TO:"+city[destinationCity]);
-         System.out.println("MINIMUM DISTANCE:"+distances [sourceCity][destinationCity]+"km" );
+         System.out.println("MINIMUM DISTANCE:"+shortestDistance+"km" );
          System.out.println("VEHICLE:"+vehicle[vehicleType] );
          System.out.println("WEIGHT:"+weight + "kg");
-         System.out.println("___________________________________");
-         System.out.println("BASE COST:"+ ((distances [sourceCity][destinationCity]+" x " +ratePerKm[vehicleType])+" x "+ "(1+("+weight+"/10000)) = ")+value1.format(baseCost) + " LKR");
+         System.out.println("____________shortestDistance_______________________");
+         System.out.println("BASE COST:"+ ((shortestDistance +" x " +ratePerKm[vehicleType])+" x "+ "(1+("+weight+"/10000)) = ")+value1.format(baseCost) + " LKR");
          System.out.println("FUEL USED :" + value2.format(usedFuel) +" L" );
          System.out.println("FUEL COST:"+ value1.format(fuelCost) +"LKR" );
          System.out.println("OPERATIONAL COST:" + value1.format(totalCost) +"LKR"  );  
@@ -413,11 +425,14 @@ import java.text.DecimalFormat;
                  String answer=sc.nextLine().toUpperCase();
                  addAnother=answer.equals("YES"); //continue loop
                  
-        }
+        }System.out.println("Delivery details added Successfully!");
+        
+        
+        
+       
+            }
          
-    }System.out.println("Delivery details added Successfully!");
-         
-    }
+    
      public static void deliveryTable(){
          
   
@@ -428,23 +443,143 @@ import java.text.DecimalFormat;
             }
           //display delivery records
           
-         System.out.println("\n  _____ DELIVERY RECORDS ____");
+         System.out.println("\n __________ DELIVERY RECORDS ___________");
          for(int i=0;i<deliveryCount;i++){
+         System.out.println ("Delivery number :"+ (i+1)) ;  
          System.out.println("FROM:"+deliverySource[i]);
          System.out.println("TO:"+deliveryDestination [i]); 
          System.out.println("MINIMUM DISTANCE:"+deliveryDistance [i]+"km" );
           System.out.println("VEHICLE:"+deliveryVehicle[i] );
          System.out.println("WEIGHT:"+deliveryWeight[i]+ "kg");   
           System.out.println("CUSTOMER CHARGE:"+ deliveryCharge [i] + "LKR");
+          System.out.println("=================================================");
      }
  
     
-             } 
+             }
+     
+     public static int LeastDistanceRoute(String[]city,int[][] distances,int cityCount,int sourceCity,int destinationCity){
+         //created for find least distance route from one city to another(<=4 Ccities)
+         if (sourceCity==destinationCity){//make sure source and destination is different
+             System.out.println("Source and destination can't be same!");
+             return 0;
+             
+         }
+         
+         int leastDistance =Integer.MAX_VALUE; // first got least distance as a large number like infinity
+         List<Integer> bestPath=new ArrayList<>();
+         
+         //consider the direct route
+         if(distances[sourceCity][destinationCity]> 0){ //if direct route is gtreater than 0
+             leastDistance=distances[sourceCity][destinationCity];//least distance= direct route
+             bestPath=Arrays.asList(sourceCity,destinationCity);
+         }
+         
+         //  consider routes with one intermediate city
+         for( int x=0;x<cityCount;x++){  // to get count in cities.x is the intemediate city index
+             if(x==sourceCity || x == destinationCity)
+                 continue; // prevent repeating the indexes of source and destination
+             if(distances[sourceCity][x] > 0 && distances[x][destinationCity] >0){
+                 int total=distances[sourceCity][x] +distances[x][destinationCity];// getting the distances between source,x and destination
+                 if(total<leastDistance){
+                        leastDistance =  total;// if total is less than the direct route distance,now total become least distance route
+                        bestPath=Arrays.asList(sourceCity,x,destinationCity);
+                 }
+             }    
+                 
+        }
+         
+         //consider routes with two intermediate cities
+          for( int x=0;x<cityCount;x++){  // to get count in cities.x is one intemediate city index
+             if(x==sourceCity || x == destinationCity)
+                 continue; // prevent repeating the indexes of source and destination
+                  for( int y=0;y<cityCount;y++){ //y is for other intermediate city
+                      if(y==sourceCity || y == destinationCity || y==x)
+                          continue;  // prevent repeating the indexes of source , other intermediate city and destination
+                      
+                  
+                  if(distances[sourceCity][x] > 0 && distances[x][y]>0 && distances[y][destinationCity] >0){ // confirm each distaces having a value which is greater than 0
+                 int total=distances[sourceCity][x] +distances[x][y]+distances[y][destinationCity ];// getting the distances between source,x ,y and destination
+                   if(total<leastDistance){
+                        leastDistance =  total;// if total is less than the direct route distance,now total become least distance route
+                        bestPath=Arrays.asList(sourceCity,x,y,destinationCity);
+                 }
+             }    
+          }      
+        }
+         if ( bestPath.isEmpty()|| leastDistance==Integer.MAX_VALUE){ // checking the values of bestPath and leastDistance  has changed or not
+                      
+              System.out.println("\n No valid route found! \n");
+              return 0;}
+         
+           System.out.println("\n ======== SH0RTEST ROUTE======== \n") ;
+          System.out.print("Route:");
+           for( int i=0;i<bestPath.size();i++){
+               System.out.print(city[bestPath.get(i)]);// output the  least distance route by city names
+               if(i< bestPath.size () -1)
+                   System.out.print("->");  //repeating arrows until destination city from source city
+           }
+            System.out.println("\n Total Distances:"+ leastDistance+ "km");
+            System.out.println("================================");
+            return  leastDistance;
+           
+           
+           
+               
+               
+               
+           }
+          
+          
+                     
+                 
+             
+             
+             
+         
+     }
+         
+             
+         
+         
+         
+         
+         
+     
+     
+     
+   
+    
+     
+ 
+
+
     
 
 
+
+
      
- }  
+            
+         
+     
+             
+    
+         
+         
+         
+     
+         
+         
+         
+    
+    
+
+            
+     
+
+     
+ 
          
          
          
