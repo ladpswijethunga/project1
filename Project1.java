@@ -454,30 +454,10 @@ import java.text.DecimalFormat;
             }
          
     
-     public static void deliveryTable(){
+  
          
   
-          // checking avilability of cities to dispaly
-            if (deliveryCount==0){
-               System.out.println("NO deliveries to display!");
-               return;
-            }
-          //display delivery records
           
-         System.out.println("\n __________ DELIVERY RECORDS ___________");
-         for(int i=0;i<deliveryCount;i++){
-         System.out.println ("Delivery number :"+ (i+1)) ;  
-         System.out.println("FROM:"+deliverySource[i]);
-         System.out.println("TO:"+deliveryDestination [i]); 
-         System.out.println("MINIMUM DISTANCE:"+deliveryDistance [i]+"km" );
-          System.out.println("VEHICLE:"+deliveryVehicle[i] );
-         System.out.println("WEIGHT:"+deliveryWeight[i]+ "kg");   
-          System.out.println("CUSTOMER CHARGE:"+ deliveryCharge [i] + "LKR");
-          System.out.println("=================================================");
-     }
- 
-    
-             }
      
      public static int LeastDistanceRoute(String[]city,int[][] distances,int cityCount,int sourceCity,int destinationCity){
          //created for find least distance route from one city to another(<=4 Ccities)
@@ -550,6 +530,45 @@ import java.text.DecimalFormat;
                
                
            }
+
+      public static void deliveryTable(){
+
+       Scanner sc=new Scanner (System.in);
+         System.out.print("Enter the delivery number: ");
+         int i=sc.nextInt();
+        
+          // checking avilability of cities to dispaly
+            if (deliveryCount==0){
+               System.out.println("NO deliveries to display!");
+               return;
+            }
+            
+         
+          for( i=0;i<deliveryCount;i++){
+         
+  
+          // checking avilability of cities to dispaly
+            if (deliveryCount==0){
+               System.out.println("NO deliveries to display!");
+               return;
+            }
+            
+            
+            
+          //display delivery records
+          
+         System.out.println("\n __________ DELIVERY RECORDS ___________");
+        
+         System.out.println ("Delivery number :"+ (i+1)) ;  
+         System.out.println("FROM:"+deliverySource[i]);
+         System.out.println("TO:"+deliveryDestination [i]); 
+         System.out.println("MINIMUM DISTANCE:"+deliveryDistance [i]+"km" );
+          System.out.println("VEHICLE:"+deliveryVehicle[i] );
+         System.out.println("WEIGHT:"+deliveryWeight[i]+ "kg");   
+          System.out.println("CUSTOMER CHARGE:"+ deliveryCharge [i] + "LKR");
+          System.out.println("=================================================");
+     }
+ 
           
           
                      
