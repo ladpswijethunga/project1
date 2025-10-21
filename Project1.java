@@ -349,7 +349,9 @@ import java.text.DecimalFormat;
              System.out.println(i+"-"+vehicle[i]);  }
          
          int vehicleType;
-          while(true){
+         double weight;
+        
+            while(true){
          //geting user input
          System.out.print("Vehicle:");
          vehicleType=sc.nextInt();
@@ -359,23 +361,22 @@ import java.text.DecimalFormat;
          //make sure user giving the valid input
          if(vehicleType< 0 || vehicleType>vehicle.length){
              System.out.println("Invalid input! Enter a number in between o and "+(vehicle.length-1));
-             continue; }
-         break;
-     
-         
-        }
-    
+           continue; }
+           
+  
          //getting user input about weight
          System.out.print("ENTER TOTAL WEIGHT HAS TO DELIVER IN kg:");
-         double weight=sc.nextDouble();
+          weight = sc.nextDouble();
           sc.nextLine();//to avoid user input errors
          
          //make sure weight doesn't exceed the weight limit of choosed vehicle
          if( weight >kgCapacity[vehicleType] ){
              System.out.println("The selected vehicle can't carry this weight.Try another vehicle!");
-             return;
-             
-         }
+            continue;     }
+        
+         break;} 
+            
+            
          
          int shortestDistance= LeastDistanceRoute(city,distances,cityCount,sourceCity,destinationCity);//calling the LeastDistanceRoute method
         
