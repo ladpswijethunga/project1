@@ -5,6 +5,8 @@
 package project1;
 import java.util.*;
 import java.text.DecimalFormat;
+import java.io.*; //for all java.io classes
+
 
 
 
@@ -26,15 +28,21 @@ import java.text.DecimalFormat;
              static String [] deliveryVehicle= new String[MAX_DELIVERIES];
             static  double [] deliveryWeight= new double[MAX_DELIVERIES];
             static String [] deliveryCharge= new String[MAX_DELIVERIES];//data type changed to the string ,while converting it to only two decimal places
-       static  int deliveryCount=0;
+            static  int deliveryCount=0;
 
 
     public static void main(String[] args) {
-        //calling methods in main method
         
+         //loading files at the start
+        cityCount= loadRoutes (city,distances);
+           
+        //calling methods in main method
+        if (cityCount == 0){ // to confirm availibility of data
                 distances();
                 cities();
-             
+        } 
+        deliveryCount = loadDeliveries(deliverySource,deliveryDestination,deliveryDistance, deliveryVehicle ,deliveryWeight,deliveryCharge);
+           
         Scanner sc=new Scanner(System.in);
 
         while (true){
@@ -62,6 +70,12 @@ import java.text.DecimalFormat;
                     reportMenu();
                     break;
                 case 5:
+                    // CALLING DATA  SAVING METHODS WHEN CHOOSED TO EXIT,so changes persist
+              saveRoutesToFile(city,distances,cityCount);
+              saveDeliveriesToFils (deliverySource,
+                 deliveryDestination ,deliveryDistance,deliveryVehicle ,deliveryWeight,deliveryCharge, deliveryCount);
+              System.out.println("ALL DATA SAVED!EXITING!");
+              
                     return;
                 default:
                      System.out.println("Invalid Input!");
@@ -70,8 +84,8 @@ import java.text.DecimalFormat;
             
              
         }
-        
-       
+            
+                          
                
         
     }       
@@ -566,7 +580,7 @@ import java.text.DecimalFormat;
          int deliveryNumber=sc.nextInt();
         
           // checking avilability of cities to dispaly
-            if (deliveryCount==0 || deliveryNumber < 0 || deliveryNumber>deliveryCount ){
+            if (deliveryCount==0 || deliveryNumber <=0 || deliveryNumber>deliveryCount ){
                System.out.println("NO deliveries to display!");
                return;
             }
@@ -589,6 +603,172 @@ import java.text.DecimalFormat;
  
     
              }
+                    // for save routes
+     
+         static void saveRoutesToFile(String []city,int [][]distances,int cityCount) {
+             
+      File tempFile =new File (" routes_temp.txt"); // created a temporary file.because  real files stays intact until the write completes
+      try // prevents resource leaks and ensures the file handle is released with automatically closing file even if an exception occurs 
+          (BufferedWriter writer = new BufferedWriter( new FileWriter(tempFile))){ //BufferedReader wraps FileWriter for efficient writing
+          writer.write(cityCount + "\n"); //stores number of cities
+          for(int i=0; i< cityCount; i++){
+              writer.write(city[i]+ "\n"); //write each city in its own line
+          }
+          for(int i=0; i< cityCount; i++){
+              for (int j=0;j< cityCount;j++){
+                  writer.write(distances [i][j]+ ( j< cityCount -1 ? " " : " "));} //each matrix roe is one line  with space separated integers
+               writer.newLine();}
+          writer.flush(); // forces buffered data to disk cleary
+                  
+        //delete old file (if exists) then rename the temp file to the real file name to avoid half written files
+        File realFile =new File("routes.txt");  
+        if( realFile.exists()) 
+            realFile.delete(); 
+        tempFile.renameTo(realFile);
+        System.out.println("ROUTES SAVED SUCCESSFULLY! ");
+        }
+      catch(IOException e){ //handles I/O isuues and prevents the whole program from crashing
+          System.out.println (" ERROR SAVING IN ROUTES: " + e.getMessage()); //telling the user that something went wrong
+         }
+      
+      }
+         static int loadRoutes (String []city,int [][]distances){
+             File file = new File ("routes.txt");
+             if (! file.exists()){ // if no file after return 0 it can call back to default cities in code
+                 System.out.println("NO ROUTES FILE FOUND");
+                 return 0;  
+             }
+             int cityCount =0;
+                // giving auto close on exit
+             try
+          (BufferedReader reader = new BufferedReader( new FileReader(file))){ 
+                 //read the first line in cities
+                 cityCount= Integer.parseInt(reader.readLine().trim());  // every readLine gives a city name
+             
+                 for(int i=0; i< cityCount; i++){
+                     city[i]=reader.readLine().trim();
+                 }
+                 for(int i=0; i< cityCount; i++){
+                      //splits with spaces and pass each piece with Integer.parseInt
+                     String [] parts =reader.readLine().trim().split("\\s+");
+                     for (int j=0;j< cityCount;j++){
+                         distances [i][j]=Integer.parseInt(parts[j]);
+                         
+                     }
+                     
+                 }
+                 System.out.println("ROUTES LOADED SUCCESSFULLY! ("+ cityCount+ "cities)");}
+             catch (Exception e){ // giving chance to detect errors
+                 System.out.println("ERROR SAVING IN ROUTES : "+ e.getMessage());
+                 cityCount = 0;
+             } return cityCount;
+                 
+             }
+         
+              static void saveDeliveriesToFils (String []deliverySource,
+                  String [] deliveryDestination ,int []deliveryDistance, String [] deliveryVehicle ,double [] deliveryWeight,String [] deliveryCharge,int deliveryCount
+              ){
+                  //first using a tempory file to safe approach
+                  File tempFile = new File ("deliveries_temp.txt");
+                  try
+                      (BufferedWriter writer = new BufferedWriter( new FileWriter(tempFile))){
+                       writer.write(deliveryCount + "\n"); 
+                        for(int i=0; i< cityCount; i++){
+                           writer.write(String .join ( ",",
+                                   deliverySource[i],
+                                   deliveryDestination [i],
+                                   String.valueOf(deliveryDistance[i]),
+                                   deliveryVehicle [i],
+                                   String.valueOf(deliveryWeight [i]),
+                                  deliveryCharge[i]
+                           ));
+                        writer.newLine();
+                        }
+                        //writer.flush();
+                        
+                File realFile =new File ("deliveries.txt");
+                if(realFile.exists())
+                    realFile.delete();
+                tempFile.renameTo(realFile);
+                
+                System.out.println("DELIVERIES SAVED SUCCESSFULLY! ("+ cityCount+ "cities)");}
+             catch (IOException e){
+                 System.out.println("ERROR SAVING IN DELEIVERIES : "+ e.getMessage());
+                
+             }
+                 
+                
+                
+         }
+              
+              static int loadDeliveries(String []deliverySource,
+                  String [] deliveryDestination ,int []deliveryDistance, String [] deliveryVehicle ,double [] deliveryWeight,String [] deliveryCharge
+              ){
+                  File file = new File ( "deliveries.txt");
+                      if (! file.exists()){
+                 System.out.println("NO DELIVERIES FILE FOUND");
+                 return 0;  
+             }
+                 int deliveryCount = 0;
+                try 
+                   (BufferedReader reader = new BufferedReader( new FileReader(file))){ 
+                      deliveryCount= Integer.parseInt(reader.readLine().trim()); // tells how many records to except
+                      for(int i=0; i< deliveryCount; i++){
+                         String line =reader.readLine(); // read a line,skip if empty
+                          if (line == null || line.trim().isEmpty())
+                               continue;
+                            String [] parts =line.split(",");// getiing field
+                             if(parts.length < 6) //protect against partial lines
+                            continue;
+                       deliverySource[i]=parts[0];
+                       deliveryDestination [i]=parts[1];
+                       deliveryDistance[i]=Integer.parseInt(parts[2]);
+                       deliveryVehicle [i]=parts[3];
+                       deliveryWeight [i]=Integer.parseInt(parts[4]);
+                       deliveryCharge[i]=parts[5];
+                   }
+                     System.out.println("DELIVERIES LOADED SUCCESSFULLY! ("+ deliveryCount+ "records)");
+                  }
+                    catch(Exception e){ //any parse error caughta and handle by catch 
+                    System.out.println("ERROR LOADING IN DELIVERIES : "+ e.getMessage());
+                        deliveryCount = 0;
+                } 
+                       return deliveryCount; // to caller to know how many deliveries were loaded
+              }
+                       
+              
+         }       
+             
+                  
+            
+                        
+
+         
+                                   
+                                   
+                                  
+                           
+                      
+                      
+                  
+                  
+                  
+                  
+             
+             
+             
+         
+         
+         
+          
+          
+          
+             
+             
+             
+         
+     
+     
           
           
                  
@@ -597,7 +777,7 @@ import java.text.DecimalFormat;
              
              
          
-     }
+     
          
              
          
