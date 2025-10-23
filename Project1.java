@@ -37,10 +37,10 @@ import java.io.*; //for all java.io classes
         cityCount= loadRoutes (city,distances);
            
         //calling methods in main method
-        if (cityCount == 0){ // to confirm availibility of data
+       if(cityCount==0 ){ // no file,use default
                 distances();
                 cities();
-        } 
+       }
         deliveryCount = loadDeliveries(deliverySource,deliveryDestination,deliveryDistance, deliveryVehicle ,deliveryWeight,deliveryCharge);
            
         Scanner sc=new Scanner(System.in);
@@ -72,7 +72,7 @@ import java.io.*; //for all java.io classes
                 case 5:
                     // CALLING DATA  SAVING METHODS WHEN CHOOSED TO EXIT,so changes persist
               saveRoutesToFile(city,distances,cityCount);
-              saveDeliveriesToFils (deliverySource,
+              saveDeliveriesToFiles (deliverySource,
                  deliveryDestination ,deliveryDistance,deliveryVehicle ,deliveryWeight,deliveryCharge, deliveryCount);
               System.out.println("ALL DATA SAVED!EXITING!");
               
@@ -561,42 +561,52 @@ import java.io.*; //for all java.io classes
                   longestRoute =deliveryDistance [i]; 
               if(deliveryDistance [i] < shortestRoute) // finding longestRoute by comparing routes with  deliveryDistance [0]
                   shortestRoute=deliveryDistance [i];}
+          
+            DecimalFormat df =new DecimalFormat("0.00"); // 2 decimal places
 
               //printing the values
              System.out.println("============ PERFORMANCE REPORT ============");
              System.out.println(" Total completed deliveries: " + deliveryCount  );
              System.out.println("Total distance covered: "+ totalDistance + "km");
-             System.out.println("Average delivery time: "+ (totalTime/deliveryCount) + " hours");
+             System.out.println("Average delivery time: "+ df.format(totalTime/deliveryCount) + " hours");
              System.out.println("Total Revenue: "+ totalRevenue + " LKR");
              System.out.println("Total profit: "+ totalProfit +"LKR");
              System.out.println( "Completed longest route: "+ longestRoute + "km");
              System.out.println( "Completed shortest route: "+  shortestRoute + "km");
              System.out.println("=============================================");  
           }
+     
+     
           
-     public static void deliveryTable(){
+        public static void deliveryTable(){
+            if (deliveryCount==0){
+               System.out.println("NO deliveries to display!"); 
+                  return;
+            }
           Scanner sc=new Scanner (System.in);
-         System.out.print("Enter the delivery number: ");
-         int deliveryNumber=sc.nextInt();
+          System.out.print("Enter the delivery number (1 to " +deliveryCount+  " ): ");
+          int deliveryNumber =sc.nextInt();
         
           // checking avilability of cities to dispaly
-            if (deliveryCount==0 || deliveryNumber <=0 || deliveryNumber>deliveryCount ){
-               System.out.println("NO deliveries to display!");
-               return;
+            if ( deliveryNumber < 1 || deliveryNumber>deliveryCount ){
+                System.out.println(" Invalid delivery number! please enter a number between 1 and " +deliveryCount + "!" );
+                return;
             }
-            
-           
-             
+         
           //display delivery records
+           int index = deliveryNumber-1; // convert to 0-based index
+           DecimalFormat df =new DecimalFormat("0.00"); // 2 decimal places
+           
           
          System.out.println("\n __________ DELIVERY RECORDS ___________");
          System.out.println ("Delivery Number :"+ (deliveryNumber)) ;  
-         System.out.println("FROM:"+deliverySource[deliveryNumber-1]);
-         System.out.println("TO:"+deliveryDestination [deliveryNumber-1]); 
-         System.out.println("MINIMUM DISTANCE:"+deliveryDistance [deliveryNumber-1]+"km" );
-          System.out.println("VEHICLE:"+deliveryVehicle[deliveryNumber-1] );
-         System.out.println("WEIGHT:"+deliveryWeight[deliveryNumber-1]+ "kg");   
-          System.out.println("CUSTOMER CHARGE:"+ deliveryCharge [deliveryNumber-1] + "LKR");
+         System.out.println("FROM:"+deliverySource[ index]);
+         System.out.println("TO:"+deliveryDestination [ index]); 
+         System.out.println("MINIMUM DISTANCE:"+deliveryDistance [ index]+"km" );
+          System.out.println("VEHICLE:"+deliveryVehicle[ index] );
+         System.out.println("WEIGHT:"+deliveryWeight[ index]+ "kg");   
+          System.out.println("CUSTOMER CHARGE:"+ deliveryCharge [ index] + "LKR");
+         
           System.out.println("=================================================");
                 
    
@@ -607,92 +617,77 @@ import java.io.*; //for all java.io classes
      
          static void saveRoutesToFile(String []city,int [][]distances,int cityCount) {
              
-      File tempFile =new File (" routes_temp.txt"); // created a temporary file.because  real files stays intact until the write completes
+     
       try // prevents resource leaks and ensures the file handle is released with automatically closing file even if an exception occurs 
-          (BufferedWriter writer = new BufferedWriter( new FileWriter(tempFile))){ //BufferedReader wraps FileWriter for efficient writing
-          writer.write(cityCount + "\n"); //stores number of cities
+          (PrintWriter writer = new PrintWriter( new FileWriter("routes.txt"))){ 
+          writer.println(cityCount); //stores number of cities
           for(int i=0; i< cityCount; i++){
-              writer.write(city[i]+ "\n"); //write each city in its own line
+              writer.println(city[i]); //write each city in its own line
           }
           for(int i=0; i< cityCount; i++){
               for (int j=0;j< cityCount;j++){
-                  writer.write(distances [i][j]+ ( j< cityCount -1 ? " " : " "));} //each matrix roe is one line  with space separated integers
-               writer.newLine();}
-          writer.flush(); // forces buffered data to disk cleary
-                  
-        //delete old file (if exists) then rename the temp file to the real file name to avoid half written files
-        File realFile =new File("routes.txt");  
-        if( realFile.exists()) 
-            realFile.delete(); 
-        tempFile.renameTo(realFile);
-        System.out.println("ROUTES SAVED SUCCESSFULLY! ");
-        }
-      catch(IOException e){ //handles I/O isuues and prevents the whole program from crashing
+                  writer.print(distances [i][j]); 
+                  if(j<cityCount-1)
+                      writer.print(" ");
+              }     
+              writer.println();
+          }
+         
+     
+        
+      }catch(IOException e){ //handles I/O isuues and prevents the whole program from crashing
           System.out.println (" ERROR SAVING IN ROUTES: " + e.getMessage()); //telling the user that something went wrong
          }
       
       }
+         
+         
+         //load routes.txt
+         
          static int loadRoutes (String []city,int [][]distances){
+           
              File file = new File ("routes.txt");
-             if (! file.exists()){ // if no file after return 0 it can call back to default cities in code
-                 System.out.println("NO ROUTES FILE FOUND");
+             if (! file.exists()) // if no file after return 0 it can call back to default cities in code
                  return 0;  
-             }
-             int cityCount =0;
-                // giving auto close on exit
-             try
-          (BufferedReader reader = new BufferedReader( new FileReader(file))){ 
-                 //read the first line in cities
-                 cityCount= Integer.parseInt(reader.readLine().trim());  // every readLine gives a city name
              
-                 for(int i=0; i< cityCount; i++){
-                     city[i]=reader.readLine().trim();
+             try(Scanner sc = new Scanner(file)){ 
+                int countCity= sc.nextInt(); // read from file
+                sc.nextLine();
+                 for(int i=0; i<countCity ; i++){
+                     city[i]=sc.nextLine();
                  }
-                 for(int i=0; i< cityCount; i++){
-                      //splits with spaces and pass each piece with Integer.parseInt
-                     String [] parts =reader.readLine().trim().split("\\s+");
-                     for (int j=0;j< cityCount;j++){
-                         distances [i][j]=Integer.parseInt(parts[j]);
+                 for(int i=0; i<countCity ; i++){
+                      for (int j=0;j<countCity; j++){
+                         distances [i][j]=sc.nextInt();
                          
                      }
                      
                  }
-                 System.out.println("ROUTES LOADED SUCCESSFULLY! ("+ cityCount+ "cities)");}
-             catch (Exception e){ // giving chance to detect errors
-                 System.out.println("ERROR SAVING IN ROUTES : "+ e.getMessage());
-                 cityCount = 0;
-             } return cityCount;
-                 
-             }
+                   return countCity; // return to main
+              
+             }catch (Exception e){ // giving chance to detect errors
+                 System.out.println("ERROR LOADING IN ROUTES : "+ e.getMessage());
+             
+                return 0;
+              }   
+            }
          
-              static void saveDeliveriesToFils (String []deliverySource,
+         
+                // save deliveries in a txt file
+         
+              static void saveDeliveriesToFiles (String []deliverySource,
                   String [] deliveryDestination ,int []deliveryDistance, String [] deliveryVehicle ,double [] deliveryWeight,String [] deliveryCharge,int deliveryCount
               ){
-                  //first using a tempory file to safe approach
-                  File tempFile = new File ("deliveries_temp.txt");
+                  
                   try
-                      (BufferedWriter writer = new BufferedWriter( new FileWriter(tempFile))){
-                       writer.write(deliveryCount + "\n"); 
-                        for(int i=0; i< cityCount; i++){
-                           writer.write(String .join ( ",",
-                                   deliverySource[i],
-                                   deliveryDestination [i],
-                                   String.valueOf(deliveryDistance[i]),
-                                   deliveryVehicle [i],
-                                   String.valueOf(deliveryWeight [i]),
-                                  deliveryCharge[i]
-                           ));
-                        writer.newLine();
+                      (PrintWriter writer = new PrintWriter( new FileWriter("deliveries.txt"))){
+                       writer.println(deliveryCount); 
+                        for(int i=0; i<deliveryCount ; i++){
+                           writer.println( deliverySource[i]+ "," + deliveryDestination [i]+ "," + deliveryDistance[i]+ "," + deliveryVehicle [i]+ "," + deliveryWeight [i]+ "," + deliveryCharge[i] );
+                     
                         }
-                        //writer.flush();
                         
-                File realFile =new File ("deliveries.txt");
-                if(realFile.exists())
-                    realFile.delete();
-                tempFile.renameTo(realFile);
-                
-                System.out.println("DELIVERIES SAVED SUCCESSFULLY! ("+ cityCount+ "cities)");}
-             catch (IOException e){
+                  } catch (IOException e){
                  System.out.println("ERROR SAVING IN DELEIVERIES : "+ e.getMessage());
                 
              }
@@ -701,40 +696,41 @@ import java.io.*; //for all java.io classes
                 
          }
               
+              //load deliveries.txt
+              
               static int loadDeliveries(String []deliverySource,
                   String [] deliveryDestination ,int []deliveryDistance, String [] deliveryVehicle ,double [] deliveryWeight,String [] deliveryCharge
               ){
                   File file = new File ( "deliveries.txt");
-                      if (! file.exists()){
-                 System.out.println("NO DELIVERIES FILE FOUND");
-                 return 0;  
-             }
-                 int deliveryCount = 0;
-                try 
-                   (BufferedReader reader = new BufferedReader( new FileReader(file))){ 
-                      deliveryCount= Integer.parseInt(reader.readLine().trim()); // tells how many records to except
-                      for(int i=0; i< deliveryCount; i++){
-                         String line =reader.readLine(); // read a line,skip if empty
-                          if (line == null || line.trim().isEmpty())
-                               continue;
-                            String [] parts =line.split(",");// getiing field
-                             if(parts.length < 6) //protect against partial lines
-                            continue;
+                      if (! file.exists())
+                           return 0;  
+                      
+                 try 
+                   (Scanner sc =new Scanner (file)){ 
+                      int count= Integer.parseInt(sc.nextLine().trim()); // tells how many records to except
+                      for(int i=0; i<count && sc.hasNextLine() ; i++){
+                         String [] parts =sc.nextLine().split(","); 
+                          if (parts.length==6){
+                               
                        deliverySource[i]=parts[0];
                        deliveryDestination [i]=parts[1];
                        deliveryDistance[i]=Integer.parseInt(parts[2]);
                        deliveryVehicle [i]=parts[3];
-                       deliveryWeight [i]=Integer.parseInt(parts[4]);
+                       deliveryWeight [i]=Double.parseDouble(parts[4]);
                        deliveryCharge[i]=parts[5];
                    }
-                     System.out.println("DELIVERIES LOADED SUCCESSFULLY! ("+ deliveryCount+ "records)");
-                  }
-                    catch(Exception e){ //any parse error caughta and handle by catch 
+                    
+                 } 
+                      return count;
+                 } catch(Exception e){ //any parse error caughta and handle by catch 
                     System.out.println("ERROR LOADING IN DELIVERIES : "+ e.getMessage());
-                        deliveryCount = 0;
+                        return 0;
                 } 
-                       return deliveryCount; // to caller to know how many deliveries were loaded
+                     
               }
+              
+              
+              
                        
               
          }       
