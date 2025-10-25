@@ -662,7 +662,7 @@ import java.io.*; //for all java.io classes
                          
                      }
                      
-                 }
+                 } System.out.println("Routes successfully loaded from routes.txt");
                    return countCity; // return to main
               
              }catch (Exception e){ // giving chance to detect errors
@@ -720,7 +720,8 @@ import java.io.*; //for all java.io classes
                        deliveryCharge[i]=parts[5];
                    }
                     
-                 } 
+                 }  System.out.println("Deliveries successfully loaded from deliveries.txt");
+                    System.out.println(count + "Deliveries found!");
                       return count;
                  } catch(Exception e){ //any parse error caughta and handle by catch 
                     System.out.println("ERROR LOADING IN DELIVERIES : "+ e.getMessage());
